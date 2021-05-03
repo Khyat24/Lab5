@@ -1,16 +1,94 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
+let canvas = document.getElementById('user-image');
+let context = canvas.getContext('2d');
 
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
+  
+  const dims = getDimmensions(canvas.width,canvas.height,img.width, img.height);
+  context.clearRect(0,0,canvas.width, canvas.height);
+  context.fillStyle = 'black';
+  context.fillRect(0,0,canvas.width, canvas.height);
+  context.drawImage(img, dims.startX, dims.startY, dims.imageWidth, dims.imageHeight); 
+  document.getElementsByTagName('button')[0].disabled = false; //submit
+  document.getElementsByTagName('button')[1].disabled = true; //reset
+  document.getElementsByTagName('button')[2].disabled = true; //button- read
+  
 
+   
   // Some helpful tips:
   // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
 });
+
+
+
+const upload = document.getElementById('image-input');
+upload.addEventListener('change', () => {
+ img.src = URL.createObjectURL(upload.files[0]);
+ let length =  document.getElementById('image-input').value.split("\\").length;
+ let sourceImg = document.getElementById('image-input').value.split("\\");
+ img.alt = sourceImg[length-1];
+ document.getElementsByTagName('button')[1].disabled = false;
+
+});
+
+let top = document.getElementById('text-top').value;
+let bottom = document.getElementById('text-bottom').value;
+const subButton = document.getElementById('generate-meme');
+subButton.addEventListener('submit', generator);
+
+function generator(event)  {
+
+  document.getElementsByTagName('button')[0].disabled = true; //submit
+  document.getElementsByTagName('button')[1].disabled = false; //reset
+  document.getElementsByTagName('button')[2].disabled = false; //button- read
+
+top = document.getElementById('text-top').value;
+bottom = document.getElementById('text-bottom').value;
+
+
+
+context.textAlign = "center";
+context.textBaseline = "middle";
+context.fillStyle = 'white';
+context.font = "60px Impact";
+context.fillText(top, canvas.width / 2, canvas.height / 8);
+context.fillText(bottom, canvas.width / 2, canvas.height - canvas.height / 8); //
+
+event.preventDefault() ;
+}
+
+document.getElementsByTagName('button')[1].addEventListener('click', () => {
+  context.fillStyle = 'black';
+  contxt.fillRect(0,0, canvas.width, canvas.height);
+  document.getElementsByTagName('button')[0].disabled = false; //submit
+  document.getElementsByTagName('button')[1].disabled = true; //reset
+  document.getElementsByTagName('button')[2].disabled = true; //button- read
+});
+
+const range = document.getElementsByTagName('input')[3];//volume range
+let volume = 1;
+range.addEventListener('change', function() {
+  if (range.value <= 0) {
+    volume = 0;
+  }
+  else if (range.value > 0 && range.value <= 33) {
+    volume = 0.3;
+  }
+  else if (range.value > 33 && range.value <= 66) {
+    volume = 0.6;
+  }
+  else {
+    volume = 1;
+  }
+});
+
+
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
