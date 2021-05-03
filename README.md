@@ -9,4 +9,4 @@ https://khyat24.github.io/Lab5/
 
 ## Part 2:
 
-LINK TO YOUR PART 2 REPOSITORY
+https://github.com/Khyat24/github-actions-for-ci/issues/4
